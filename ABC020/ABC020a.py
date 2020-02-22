@@ -1,0 +1,6 @@
+# ABC020a
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**6)
+
+print('ABC' if int(input()) == 1 else 'chokudai')
