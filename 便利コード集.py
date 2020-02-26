@@ -107,7 +107,7 @@ def factorial(n, p, mod=1):  # n^p 繰り返し二乗法
 
 
 def evaluate(number):
-    if number <= 100:  # もっと高い値を探せ
+    if number < 100:  # もっと高い値を探せ
         return 1
     if number == 100:  # まさにこの値
         return 0
@@ -131,3 +131,13 @@ def binary_search(low, high):
             lowest = mid
 
     return [lowest, highest]
+
+    def compr_coord(array):  # 座標圧縮 n=|array|,O(NlogN) 4,120,121→0,1,2
+        toAfter = dict()
+        b = [(array[i], i) for i in range(len(array))]
+        b.sort()
+        toBefore = [0]*(len(array)+1)
+        for i in range(len(array)):
+            toAfter[array[b[i][1]]] = i
+            toBefore[i] = array[b[i][1]]
+        return (toBefore, toAfter)
