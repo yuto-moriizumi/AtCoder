@@ -9,6 +9,7 @@ class Edge:  # 通常の辺
 
 
 class Dijkstra:  # ダイクストラ法 O((V+E) * logV)
+
     def __init__(self, vCount):
         self.vCount = vCount
         self.dist = [INF for _ in range(vCount)]
@@ -28,43 +29,63 @@ class Dijkstra:  # ダイクストラ法 O((V+E) * logV)
     def addEdge(self, st, gl, cost):
         self.edges[st].append(Edge(gl, cost))
 
-# ベルマンフォード法 O(V*E)
-# edges=(頂点1,頂点2,重み)
 
+class BellmanFord:
+    """負の辺OK"""
+    class Edge:
+        def __init__(self, froom, to, cost):
+            self.froom = froom
+            self.to = to
+            self.cost = cost
 
-def BellmanFord(edges, num_v, source):
-      # グラフの初期化
-    inf = float("inf")
-    dist = [inf for i in range(num_v)]
-    dist[source-1] = 0
+    edges = set()
 
-    # 辺の緩和
-    for i in range(num_v):
-        for edge in edges:
-            if edge[0] != inf and dist[edge[1]-1] > dist[edge[0]-1] + edge[2]:
-                dist[edge[1]-1] = dist[edge[0]-1] + edge[2]
-                if i == num_v-1:
-                    return -1
+    def __init__(self, n):
+        super().__init__()
+        self.n = n
 
-    return dist
+    def addEdge(self, froom, to, cost):
+        self.edges.add(self.Edge(s, t, d))
+
+    def calc(self, source):
+        """O(|E||V|)"""
+        # グラフの初期化
+        inf = float("inf")
+        dist = [inf for _ in range(self.n)]
+        dist[source] = 0
+
+        # 辺の緩和
+        for i in range(self.n):
+            for edge in self.edges:
+                if edge.froom != inf and dist[edge.to] > dist[edge.froom] + edge.cost:
+                    dist[edge.to] = dist[edge.froom] + edge.cost
+                    if i == self.n-1:
+                        return -1
+        return dist
 
 # ワーシャルフロイド法
-# Pypyで提出すること
 
 
-n = 100
-d = [[float("inf") for i in range(n)] for i in range(n)]
-for i in range(n):
-    d[i][i] = 0  # 自身のところに行くコストは０
-
-
-def warshall_floyd(d):
-    #d[i][j]: iからjへの最短距離
-    for k in range(n):
+class WarshallFloyd:
+    def __init__(self, n):
+        super().__init__()
+        self.n = n
+        self.d = [[float("inf") for i in range(n)] for i in range(n)]
         for i in range(n):
-            for j in range(n):
-                d[i][j] = min(d[i][j], d[i][k] + d[k][j])
-    return d
+            self.d[i][i] = 0  # 自身のところに行くコストは０
+
+    def setCost(self, froom, to, cost):
+        self.d[froom][to] = cost
+        self.d[to][froom] = cost
+
+    def calc(self):
+        #d[i][j]: iからjへの最短距離
+        for k in range(self.n):
+            for i in range(self.n):
+                for j in range(self.n):
+                    self.d[i][j] = min(
+                        self.d[i][j], self.d[i][k] + self.d[k][j])
+        return self.d
 
 
 # クラスカル法
