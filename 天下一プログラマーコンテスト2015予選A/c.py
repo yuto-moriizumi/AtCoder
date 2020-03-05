@@ -1,9 +1,7 @@
-# ABC010f
+# Dinic's algorithm O(VE^2)
+# 最大独立集合=最大安定集合
+# 二部グラフなら頂点数-最大マッチング=最大安定集合
 from collections import deque
-import sys
-input = sys.stdin.readline
-sys.setrecursionlimit(10**6)
-# Dinic's algorithm
 
 
 class Dinic:
@@ -64,12 +62,29 @@ class Dinic:
         return flow
 
 
-n, g, e = map(int, input().split())
-p = list(map(int, input().split()))
-dinic = Dinic(n+1)
-for _ in range(e):
-    a, b = map(int, input().split())
-    dinic.add_multi_edge(a, b, 1, 1)
-for i in p:
-    dinic.add_edge(i, n, 1)
-print(dinic.flow(0, n))
+m, n = map(int, input().split())
+a = [list(map(int, input().split())) for _ in range(m)]
+b = [list(map(int, input().split())) for _ in range(m)]
+tree = Dinic(m * n + 2)
+diff = 0
+for i in range(m):
+    for j in range(n):
+        if (i + j) % 2 == 0:
+            tree.add_edge(i * n + j, m * n, 1)
+        else:
+            tree.add_edge(m * n + 1, i * n + j, 1)
+        if a[i][j] == b[i][j]:
+            continue
+        diff += 1
+        if j + 1 < n and a[i][j] != a[i][j + 1] and a[i][j + 1] != b[i][j + 1] and a[i][j] == b[i][j + 1]:
+            if (i + j) % 2 == 0:
+                tree.add_edge(i * n + j + 1, i * n + j, 1)
+            else:
+                tree.add_edge(i * n + j, i * n + j + 1,  1)
+        if i + 1 < m and a[i][j] != a[i+1][j]and a[i+1][j] != b[i+1][j] and a[i][j] == b[i+1][j]:
+            if (i + j) % 2 == 0:
+                tree.add_edge((i + 1) * n + j, i * n + j, 1)
+            else:
+                tree.add_edge(i * n + j, (i + 1) * n + j,  1)
+ans = tree.flow(m * n+1, m * n)
+print(diff - ans)

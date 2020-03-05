@@ -1,9 +1,5 @@
-# ABC010f
+# Dinic's algorithm O(VE^2)
 from collections import deque
-import sys
-input = sys.stdin.readline
-sys.setrecursionlimit(10**6)
-# Dinic's algorithm
 
 
 class Dinic:
@@ -64,12 +60,15 @@ class Dinic:
         return flow
 
 
-n, g, e = map(int, input().split())
-p = list(map(int, input().split()))
-dinic = Dinic(n+1)
-for _ in range(e):
-    a, b = map(int, input().split())
-    dinic.add_multi_edge(a, b, 1, 1)
-for i in p:
-    dinic.add_edge(i, n, 1)
-print(dinic.flow(0, n))
+n = int(input())
+dinic = Dinic(n * 2 + 2)
+red = [tuple(map(int, input().split())) for _ in range(n)]
+blue = [tuple(map(int, input().split())) for _ in range(n)]
+for i in range(n):
+    dinic.add_edge(n*2, i, 1)
+    for j in range(n):
+        if red[i][0] < blue[j][0] and red[i][1] < blue[j][1]:
+            dinic.add_edge(i, j+n, 1)
+for i in range(n):
+    dinic.add_edge(i+n, n*2+1, 1)
+print(dinic.flow(n*2, n*2+1))

@@ -132,12 +132,41 @@ def binary_search(low, high):
 
     return [lowest, highest]
 
-    def compr_coord(array):  # 座標圧縮 n=|array|,O(NlogN) 4,120,121→0,1,2
-        toAfter = dict()
-        b = [(array[i], i) for i in range(len(array))]
-        b.sort()
-        toBefore = [0]*(len(array)+1)
-        for i in range(len(array)):
-            toAfter[array[b[i][1]]] = i
-            toBefore[i] = array[b[i][1]]
-        return (toBefore, toAfter)
+
+def compr_coord(array):  # 座標圧縮 n=|array|,O(NlogN) 4,120,121→0,1,2
+    toAfter = dict()
+    b = [(array[i], i) for i in range(len(array))]
+    b.sort()
+    toBefore = [0]*(len(array)+1)
+    for i in range(len(array)):
+        toAfter[array[b[i][1]]] = i
+        toBefore[i] = array[b[i][1]]
+    return (toBefore, toAfter)
+
+
+def alphabetToZeroIndexed(alphabet):
+    return ord(alphabet)-97
+
+
+def Mmul(a, b):  # 行列の積
+    # [ｍ×ｎ型][ｎ×ｐ型]
+    m = len(a)
+    n = len(a[0])
+    if len(b) != n:
+        raise ValueError('列と行の数が一致しません')
+    p = len(b[0])
+    ans = [[0]*p for _ in range(m)]
+    for i in range(m):
+        for j in range(p):
+            for k in range(n):
+                ans[i][j] += a[i][k]*b[k][j]
+    return ans
+
+
+def Mfactorial(n, p):  # n^p 繰り返し二乗法+行列の積
+    if (p == 1):
+        return n
+    if (p % 2 == 0):
+        t = factorial(n, p // 2)
+        return Mmul(t, t)
+    return Mmul(factorial(n, p - 1), n)

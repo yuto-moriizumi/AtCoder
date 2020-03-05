@@ -1,9 +1,6 @@
-# ABC010f
+# Dinic's algorithm O(VE^2)
+
 from collections import deque
-import sys
-input = sys.stdin.readline
-sys.setrecursionlimit(10**6)
-# Dinic's algorithm
 
 
 class Dinic:
@@ -64,12 +61,25 @@ class Dinic:
         return flow
 
 
-n, g, e = map(int, input().split())
-p = list(map(int, input().split()))
-dinic = Dinic(n+1)
-for _ in range(e):
-    a, b = map(int, input().split())
-    dinic.add_multi_edge(a, b, 1, 1)
-for i in p:
-    dinic.add_edge(i, n, 1)
-print(dinic.flow(0, n))
+r, c = map(int, input().split())
+tree = Dinic(r*c+2)
+C = [input() for _ in range(r)]
+vs = 0
+for i in range(r):
+    for j in range(c):
+        if C[i][j] == '*':
+            continue
+        vs += 1
+        if (i + j) % 2 == 0:
+            tree.add_edge(r * c, i * c + j,  1)
+            if 0 <= i-1 and C[i-1][j] == '.':
+                tree.add_edge(i * c + j, (i - 1) * c + j, 1)
+            if i+1 < r and C[i+1][j] == '.':
+                tree.add_edge(i * c + j, (i + 1) * c + j, 1)
+            if 0 <= j-1 and C[i][j-1] == '.':
+                tree.add_edge(i * c + j, i * c + j - 1, 1)
+            if j+1 < c and C[i][j+1] == '.':
+                tree.add_edge(i * c + j, i * c + j + 1, 1)
+        else:
+            tree.add_edge(i * c + j, r * c+1,  1)
+print(vs-tree.flow(r*c, r*c+1))

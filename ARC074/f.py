@@ -1,9 +1,5 @@
-# ABC010f
-from collections import deque
-import sys
-input = sys.stdin.readline
-sys.setrecursionlimit(10**6)
 # Dinic's algorithm
+from collections import deque
 
 
 class Dinic:
@@ -64,12 +60,26 @@ class Dinic:
         return flow
 
 
-n, g, e = map(int, input().split())
-p = list(map(int, input().split()))
-dinic = Dinic(n+1)
-for _ in range(e):
-    a, b = map(int, input().split())
-    dinic.add_multi_edge(a, b, 1, 1)
-for i in p:
-    dinic.add_edge(i, n, 1)
-print(dinic.flow(0, n))
+h, w = map(int, input().split())
+dinic = Dinic((h+1)*(w+1))
+maze = [list(input()) for _ in range(h)]
+start = 0
+goal = 0
+INF = 10 ** 9 + 7
+
+for i in range(h):
+    for j in range(w):
+        if maze[i][j] == '.':
+            continue
+        if maze[i][j] == 'S':
+            start = (i + 1) * (w + 1) + j + 1
+            dinic.add_edge(start, j + 1, INF)
+            dinic.add_edge(start, (i+1)*(w+1), INF)
+        elif maze[i][j] == 'T':
+            goal = (i + 1) * (w + 1) + j + 1
+            dinic.add_edge(j + 1, goal, INF)
+            dinic.add_edge((i+1)*(w+1), goal, INF)
+        dinic.add_multi_edge(j + 1, (i + 1) * (w + 1) + j + 1, 1, 1)
+        dinic.add_multi_edge((i+1)*(w+1), (i+1)*(w+1) + j+1, 1, 1)
+ans = dinic.flow(start, goal)
+print(ans if ans < 10**9 else -1)

@@ -51,11 +51,3 @@ class MinCostFlow:
                 G[v][e[3]][1] += d
                 v = prevv[v]
         return res
-
-
-V, E, F = map(int, input().split())
-tree = MinCostFlow(V)
-for _ in range(E):
-    u, v, c, d = map(int, input().split())
-    tree.addEdge(u, v, c, d)
-print(tree.minCostFlow(0, V-1, F))

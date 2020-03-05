@@ -1,9 +1,9 @@
-# ABC010f
+# Dinic's algorithm O(VE^2)
+# 最大独立集合=最大安定集合
+# 二部グラフなら頂点数-最大マッチング=最大安定集合
+# グリッド→二部グラフ扱いの時は、とりあえず全ての頂点に有向辺を貼っておく
+# 二部マッチングでは容量1の有効辺を使うこと
 from collections import deque
-import sys
-input = sys.stdin.readline
-sys.setrecursionlimit(10**6)
-# Dinic's algorithm
 
 
 class Dinic:
@@ -62,14 +62,3 @@ class Dinic:
                 f = self.dfs(s, t, INF)
                 flow += f
         return flow
-
-
-n, g, e = map(int, input().split())
-p = list(map(int, input().split()))
-dinic = Dinic(n+1)
-for _ in range(e):
-    a, b = map(int, input().split())
-    dinic.add_multi_edge(a, b, 1, 1)
-for i in p:
-    dinic.add_edge(i, n, 1)
-print(dinic.flow(0, n))
