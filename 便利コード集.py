@@ -96,12 +96,18 @@ def cum(array):  # result[i]=i番目まで（1-indexed）の累積和
     return result
 
 
-def factorial(n, p, mod=1):  # n^p 繰り返し二乗法
+def factorial(n, p, mod=None):  # n^p 繰り返し二乗法
     if (p <= 1):
-        return n**p % mod
+        if mod != None:
+            return n**p % mod
+        return n**p
     if (p % 2 == 0):
-        return factorial(n, p // 2)**2 % mod
-    return factorial(n, p - 1) * n % mod
+        if mod != None:
+            return factorial(n, p // 2)**2 % mod
+        return factorial(n, p // 2) ** 2
+    if mod != None:
+        return factorial(n, p - 1) * n % mod
+    return factorial(n, p - 1) * n
 
 # 二分探索
 
@@ -170,3 +176,19 @@ def Mfactorial(n, p):  # n^p 繰り返し二乗法+行列の積
         t = factorial(n, p // 2)
         return Mmul(t, t)
     return Mmul(factorial(n, p - 1), n)
+
+
+def modinv(a, mod=10**9+7):
+    return pow(a, mod - 2, mod)
+
+# nCr mod m
+# modinvが必要
+# rがn/2に近いと非常に重くなる
+
+
+def combination(n, r, mod=10**9+7):
+    r = min(r, n-r)
+    res = 1
+    for i in range(r):
+        res = res * (n - i) * modinv(i+1, mod) % mod
+    return res
