@@ -1,5 +1,39 @@
+from collections import heapq
 from collections import deque
 INF = 10**12
+
+
+def dijkstra_heap(s, edge, n):
+    """
+    ヒープ式高速ダイクストラ
+    n:頂点数
+    0-indexed
+    edges[頂点番号]=[(cost,to)]
+    """
+    # 始点sから各頂点への最短距離
+    d = [INF] * n
+    used = [True] * n  # True:未確定
+    d[s] = 0
+    used[s] = False
+    edgelist = []
+    frm = [-1]*n
+    for a, b in edge[s]:
+        heapq.heappush(edgelist, (a*(10**6)+b, -1))
+    while len(edgelist):
+        minedge = heapq.heappop(edgelist)
+        froom = minedge[1]
+        minedge = minedge[0]
+        # まだ使われてない頂点の中から最小の距離のものを探す
+        if not used[minedge % (10**6)]:
+            continue
+        v = minedge % (10**6)
+        d[v] = minedge // (10 ** 6)
+        frm[v] = froom
+        used[v] = False
+        for e in edge[v]:
+            if used[e[1]]:
+                heapq.heappush(edgelist, ((e[0]+d[v])*(10**6)+e[1], v))
+    return (d, frm)
 
 
 class Edge:  # 通常の辺
