@@ -1,4 +1,7 @@
-#ABC033c
+# ABC033c
 import sys
-input = sys.stdin.readline
 sys.setrecursionlimit(10**6)
+
+s = input()
+kou = list(map(eval, s.split('+')))
+print(len(kou)-kou.count(0))
